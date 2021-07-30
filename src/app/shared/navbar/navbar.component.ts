@@ -83,6 +83,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logOut(){
+    this.cerrarNavbar();
     this.modalService.logOut();
     Swal.fire({
       title: 'Federica OFFLINE',
