@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 declare let $: any;
 import { ModalService } from 'src/app/services/modal.service';
 import Swal from 'sweetalert2'
+import { MensajesService } from 'src/app/services/mensajes.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,11 +17,12 @@ export class NavbarComponent implements OnInit {
   clave = '';
   input1: boolean;
 
-  constructor(public modalService: ModalService) { 
+  constructor(public modalService: ModalService, public mensajesService: MensajesService) { 
     this.modalService.ojo2 = true;
   }
 
   ngOnInit(): void {
+    this.mensajesService.suma;
   }
 
   cerrarNavbar(){

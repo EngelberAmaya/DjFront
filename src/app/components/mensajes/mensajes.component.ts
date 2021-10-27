@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MensajesService } from 'src/app/services/mensajes.service';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-mensajes',
@@ -8,9 +11,47 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MensajesComponent implements OnInit {
 
-  constructor() { }
+  mensajeEmail: any[] = [];
+  mensajeSel: any;
 
-  ngOnInit(): void {
+  constructor(public mensajesService: MensajesService, private router: Router) { }
+
+  ngOnInit() {
+    this.obtenerMensajes();
+    this.mensajesService.sumarMensaje();
+    window.scrollTo(0, 0);
+  }
+
+  obtenerMensajes(){
+    this.mensajesService.getMensajes()
+        .subscribe((resp: any) => {
+          console.log(resp);
+          this.mensajeEmail = resp.mensajes;
+
+          if(this.mensajeEmail.length === 0){
+             Swal.fire({
+              title: 'Mensaje',
+              text: 'No hay ningun mensaje',
+              icon: 'warning',
+            })
+          }
+
+        })
+  }
+
+  borrarMensaje(mensaje: string){
+    this.mensajeSel = mensaje;
+    this.mensajesService.borrarMensaje(this.mensajeSel._id)
+        .subscribe( () => {
+          this.router.navigateByUrl('/inicio', { skipLocationChange: true })
+              .then(() => this.router.navigate(['mensajes']))
+        });
+
+        Swal.fire({
+          title: 'Operación exitosa',
+          text: 'Mensaje Eliminado',
+          icon: 'success',
+        })
   }
 
 }
