@@ -30,19 +30,16 @@
               <a (click)="cerrarNavbar()" class="nav-link colorName3" [routerLink]="['/noticias']">Noticias</a>
             </li>
 
-            <!--<li class="nav-item mr-1 ml-1" routerLinkActive="active">
-              <a (click)="cerrarNavbar()" class="nav-link colorName3" [routerLink]="['/noticiaCompleta']">Noticia Completa</a>
-            </li>-->
-
-            <li class="nav-item mr-1 ml-1" routerLinkActive="active">
+        
+            <li *ngIf="usuarioService.autenticado" class="nav-item mr-1 ml-1" routerLinkActive="active">
               <a (click)="cerrarNavbar()" class="nav-link colorName3" [routerLink]="['/mensajes']">Mensajes
                 <span class="ml-2">{{ mensajesService.suma }}</span>
               </a>
             </li>
 
-            <li class="nav-item mr-1 ml-1" routerLinkActive="active">
+            <li *ngIf="usuarioService.autenticado" class="nav-item mr-1 ml-1" routerLinkActive="active">
               <a (click)="cerrarNavbar()" class="nav-link colorName3" [routerLink]="['/ajustes']">Ajustes
-                <i class="fas fa-user-cog"></i>
+                <i class="fas fa-user-cog ml-2"></i>
               </a>
             </li>     
            
@@ -58,7 +55,7 @@
             </div>
 
             <i (click)="logOut()" *ngIf="modalService.online" class="fa fa-sign-out-alt mr-4 fa-lg colorName3 cursor7"></i>
-            <i *ngIf="modalService.online" class="fa fa-wifi fa-lg colorName3 cursor7"></i>
+            <i *ngIf="modalService.online" class="fa fa-wifi fa-lg colorName3 animated pulse infinite"></i>
 
           </div>
 

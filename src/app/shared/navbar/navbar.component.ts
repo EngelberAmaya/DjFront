@@ -3,6 +3,8 @@ declare let $: any;
 import { ModalService } from 'src/app/services/modal.service';
 import Swal from 'sweetalert2'
 import { MensajesService } from 'src/app/services/mensajes.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { TooltipService } from 'src/app/services/tooltip.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,21 +16,25 @@ export class NavbarComponent implements OnInit {
 
   ojo = true;
   login1: boolean;
-  clave = '';
+  clave = '617481b62d6b6f1b98defba5'; //ejemplo
   input1: boolean;
 
-  constructor(public modalService: ModalService, public mensajesService: MensajesService) { 
+  constructor(public modalService: ModalService, public mensajesService: MensajesService,
+              public usuarioService: UsuarioService, public tooltipService: TooltipService) { 
     this.modalService.ojo2 = true;
   }
 
   ngOnInit(): void {
     this.mensajesService.suma;
+    this.usuarioService.getId();
+
   }
 
   cerrarNavbar(){
     $('.navbar-collapse').collapse('hide');
     /*this.login1 = false;
     this.input1 = false;*/
+     window.scrollTo(0, 0);
   }
   
   alerta() {
@@ -39,32 +45,29 @@ export class NavbarComponent implements OnInit {
   entrar(){
     this.login1 = false;
     this.input1 = true;
-    $('[data-toggle="tooltip"]').tooltip('hide');
 
     $(document).ready(() => {
        $('#focusClave').trigger('focus');
     });
+
+    this.tooltipService.cerrarTooltip();
   }
 
   onClick1(){
     this.ojo = false;
     this.login1 = false;
-    $(() => {
-      $('[data-toggle="tooltip"]').tooltip();
-    });
+    this.tooltipService.abrirTooltip();
   }
 
   onClick2(){
     this.ojo = true;
     this.login1 = true;
-     this.modalService.ojo2 = false;
-    $(() => {
-      $('[data-toggle="tooltip"]').tooltip();
-    });
+    this.modalService.ojo2 = false;
+    this.tooltipService.abrirTooltip();
   }
 
   inputLogin(){
-    if(this.clave !== '123'){
+    if(this.clave !== this.usuarioService.pass){
       this.login1 = false;
       this.input1 = false;
       this.clave = '';
@@ -73,7 +76,7 @@ export class NavbarComponent implements OnInit {
       this.login1 = false;
       this.input1 = false;
       this.clave = '';
-      this.cerrarNavbar();
+     
       // Abrir el modal del login
       $('#loginModal').modal();
       $(document).ready(() => {
@@ -81,10 +84,13 @@ export class NavbarComponent implements OnInit {
           $('#focusLogin').trigger('focus');
         });
       });
+
+      this.cerrarNavbar();
     }
   }
 
   logOut(){
+    this.usuarioService.logOut();
     this.cerrarNavbar();
     this.modalService.logOut();
     Swal.fire({

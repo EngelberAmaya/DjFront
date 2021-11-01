@@ -19,13 +19,13 @@ export class MensajesComponent implements OnInit {
   ngOnInit() {
     this.obtenerMensajes();
     this.mensajesService.sumarMensaje();
-    window.scrollTo(0, 0);
+    //window.scrollTo(0, 0);
   }
 
   obtenerMensajes(){
     this.mensajesService.getMensajes()
         .subscribe((resp: any) => {
-          console.log(resp);
+          
           this.mensajeEmail = resp.mensajes;
 
           if(this.mensajeEmail.length === 0){
@@ -39,9 +39,9 @@ export class MensajesComponent implements OnInit {
         })
   }
 
-  borrarMensaje(mensaje: string){
+  async borrarMensaje(mensaje: string){
     this.mensajeSel = mensaje;
-    this.mensajesService.borrarMensaje(this.mensajeSel._id)
+    await this.mensajesService.borrarMensaje(this.mensajeSel._id)
         .subscribe( () => {
           this.router.navigateByUrl('/inicio', { skipLocationChange: true })
               .then(() => this.router.navigate(['mensajes']))

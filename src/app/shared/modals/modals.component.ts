@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalService } from 'src/app/services/modal.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { MensajesService } from 'src/app/services/mensajes.service';
 import { NgForm } from '@angular/forms';
 declare let $: any;
 import Swal from 'sweetalert2'
@@ -17,11 +19,12 @@ export class ModalsComponent implements OnInit {
   };
 
   usuarioLogin = {
-    nombre: 'Federica',
-    password: '123'
+    nombre: '',
+    password: ''
   };
 
-  constructor(public modalService: ModalService) {
+  constructor(public modalService: ModalService, public usuarioService: UsuarioService,
+              public mensajesService: MensajesService) {
     this.modalService.privacidadSeleccionada = true;
   }
 
@@ -52,6 +55,7 @@ export class ModalsComponent implements OnInit {
 
     }else {
        $('#contacto').modal('hide');
+       this.mensajesService.crearMensaje(this.mensaje.email, this.mensaje.mensaje);
        this.limpiarMensaje();
        Swal.fire({
         title: 'Mensaje enviado correctamente',
@@ -59,7 +63,7 @@ export class ModalsComponent implements OnInit {
        });
       
     }
-    console.log(f.value);
+   
   }
 
   limpiarMensaje(){
@@ -72,12 +76,18 @@ export class ModalsComponent implements OnInit {
     this.mensaje.mensaje = ''
   }
 
-  login(forma: NgForm){
-    console.log(forma.value);
-
-    if(this.usuarioLogin.nombre === 'Federica' && this.usuarioLogin.password === '123'){
+  async login(forma: NgForm){
+    
+    if(forma.invalid){
       this.salirLogin();
-      setTimeout(() => {
+    }
+
+    const usuarioValido = await this.usuarioService.login(this.usuarioLogin.nombre, this.usuarioLogin.password) 
+
+    if(usuarioValido){
+      this.salirLogin();
+      this.usuarioService.autenticado = true;
+      
         $('.navbar-collapse').collapse('hide');
 
         Swal.fire({
@@ -89,7 +99,7 @@ export class ModalsComponent implements OnInit {
         this.limpiarUsuario();
         this.modalService.online = true;
 
-      }, 1000);
+     
     } else {
 
       Swal.fire({

@@ -17,14 +17,15 @@ export class NoticiasComponent implements OnInit {
   constructor(public noticiaService: NoticiaService, private router: Router) { }
 
   ngOnInit(): void {
-    window.scrollTo(0, 0);
+    //window.scrollTo(0, 0);
     this.noticiaService.noticiaCompleta = false;
     this.getNoticias();
+    //this.noticiaService.pagina = 1;
   }
 
   // Obtenr ultimas noticias
   getNoticias(){
-    this.noticiaService.getUltimasNoticias()
+    this.noticiaService.getUltimasNoticias2()
       .subscribe((res: RespuestaNoticia) => {
         this.noticias.push(...res.noticias);
       });
@@ -32,7 +33,6 @@ export class NoticiasComponent implements OnInit {
 
   mostrarNoticia(noticia: any){
     this.noticiaService.noticiaSel = noticia;
-    console.log(this.noticiaService.noticiaSel);
     this.noticiaService.noticiaCompleta = true;
     this.router.navigateByUrl('noticiaCompleta');
 
@@ -44,6 +44,7 @@ export class NoticiasComponent implements OnInit {
       .subscribe((resp: RespuestaNoticia) => {
         this.noticias = resp.noticias;
       });
+    //window.scrollTo(0, 0);
   }
 
   sumar(){
@@ -61,6 +62,7 @@ export class NoticiasComponent implements OnInit {
         }
 
       });
+      //window.scrollTo(0, 0);
   }
 
 }
